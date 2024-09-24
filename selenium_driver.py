@@ -16,7 +16,7 @@ logging.basicConfig(format=FORMAT, level=logging.INFO)
 class SeleniumDriver:
     def __init__(self, url: str, is_scheduled: bool = False, scheduled_start: datetime = None):
         chrome_options = Options()
-        chrome_options.add_experimental_option("detach", True)  # Não fechar o browser automaticamente
+        chrome_options.add_experimental_option("detach", True)  # não fechar o browser automaticamente
         chrome_options.add_argument("--incognito")
 
         self.main_url = url
@@ -51,7 +51,7 @@ class SeleniumDriver:
             cpf_field.submit()
 
             self.wait_and_find_clickable_element(method=By.XPATH,
-                                                 timeout=15,  # Esse pode demorar
+                                                 timeout=15,  # esse pode demorar
                                                  element_id_or_xpath="//button[@data-cy='promocode-button']")
             logging.info("CPF inserido com sucesso")
             return True
@@ -92,7 +92,6 @@ class SeleniumDriver:
             else:
                 self.add_tickets_without_discount(number_of_guests)
 
-            # Continuar processo de checkout
             continue_button = self.wait_and_find_clickable_element(method=By.ID,
                                                                    timeout=5,
                                                                    element_id_or_xpath="buttonContinue")
@@ -103,7 +102,6 @@ class SeleniumDriver:
                                                                           element_id_or_xpath="//button[@data-cy='review-button-continue']")
             review_continue_button.click()
 
-            # Aceitar termos e condições
             checkbox = self.wait_and_find_clickable_element(method=By.ID,
                                                             timeout=5,
                                                             element_id_or_xpath="tuPpEvent")
@@ -178,7 +176,6 @@ class SeleniumDriver:
         try:
             available_section_divs = self.driver.find_elements(By.XPATH, "//app-product-item")
 
-            # Refiltrar os elementos que têm o nome da seção e não estão esgotados
             desired_section_div = [div for div in available_section_divs if (section_name in div.text) and ('ESGOTADO' not in div.text.upper())]
 
             if len(desired_section_div) > 0:
@@ -187,8 +184,8 @@ class SeleniumDriver:
                 return False
         except StaleElementReferenceException as e:
             logging.info(f"Elemento desatualizado: {e}. Recarregando a página e tentando novamente.")
-            self.driver.refresh()  # Atualize a página
-            time.sleep(2)  # Tempo para a página recarregar
+            self.driver.refresh()  
+            time.sleep(2)  
             return False
 
     def define_target_section(self, desired_sections: list[str]) -> str:

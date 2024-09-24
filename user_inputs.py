@@ -10,8 +10,8 @@ SECTIONS_WITHOUT_DISCOUNT = [
     "CADEIRA ESPECIAL OESTE OURO BRANCO"
 ]
 
-USERNAME: str = "Daniel Biondi"
-PASSWORD: str = "s53534125@Pb"
+USERNAME: str = "seu_username"
+PASSWORD: str = "sua_senha"
 
 NUMBER_OF_GUESTS = 2
 
