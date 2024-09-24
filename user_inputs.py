@@ -1,0 +1,20 @@
+from datetime import datetime
+
+URL = "https://cart.spfcticket.net/saopaulofcxbotafogorj_25_09"
+
+SECTIONS_WITHOUT_DISCOUNT = [
+    "ARQUIBANCADA NORTE OURO BRANCO", 
+    "ARQUIBANCADA SUL DIAMANTE NEGRO",
+    "CADEIRA SUPERIOR NORTE OREO",
+    "CADEIRA SUPERIOR SUL DIAMANTE NEGRO", 
+    "CADEIRA ESPECIAL OESTE OURO BRANCO"
+]
+
+USERNAME: str = "Daniel Biondi"
+PASSWORD: str = "s53534125@Pb"
+
+NUMBER_OF_GUESTS = 2
+
+IS_SCHEDULED = True
+SCHEDULED_TIMESTAMP = datetime(2023, 8, 28, 21, 59)
+
