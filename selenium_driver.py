@@ -12,7 +12,6 @@ from selenium.common.exceptions import StaleElementReferenceException
 FORMAT = '%(asctime)s %(message)s'
 logging.basicConfig(format=FORMAT, level=logging.INFO)
 
-
 class SeleniumDriver:
     def __init__(self, url: str, is_scheduled: bool = False, scheduled_start: datetime = None):
         chrome_options = Options()
@@ -29,7 +28,7 @@ class SeleniumDriver:
             if time_to_wait > 0:
                 logging.info(f"Aguardando horário agendado: {scheduled_start}")
                 time.sleep(time_to_wait)
-                logging.info("AUTORIZA O ARBITRO")
+                logging.info("AUTORIZA O ÁRBITRO")
 
     def accept_cookies(self):
         try:
@@ -39,6 +38,11 @@ class SeleniumDriver:
             if cookies_button:
                 cookies_button.click()
                 logging.info("Cookies aceitos")
+        except StaleElementReferenceException as e:
+            logging.warning(f"Elemento desatualizado ao tentar aceitar cookies: {e}. Tentando novamente...")
+            self.driver.refresh()  
+            time.sleep(2)  
+            self.accept_cookies()  
         except Exception as e:
             logging.info(f"Erro ao aceitar cookies: {e}")
 
@@ -55,6 +59,11 @@ class SeleniumDriver:
                                                  element_id_or_xpath="//button[@data-cy='promocode-button']")
             logging.info("CPF inserido com sucesso")
             return True
+        except StaleElementReferenceException as e:
+            logging.warning(f"Elemento desatualizado ao tentar inserir CPF: {e}. Tentando novamente...")
+            self.driver.refresh() 
+            time.sleep(2)  
+            return self.input_cpf(cpf)  
         except Exception as e:
             self.driver.refresh()
             logging.info(f"Erro ao inserir CPF: {e}")
@@ -73,16 +82,14 @@ class SeleniumDriver:
                 section_tab_was_found = True
                 logging.info(f"Seção {section_name} encontrada")
                 return True
-            except Exception:
-                try:
-                    next_arrow_button = self.wait_and_find_clickable_element(method=By.ID,
-                                                                             timeout=5,
-                                                                             element_id_or_xpath="sector-next")
-                    next_arrow_button.click()
-                except Exception as e:
-                    logging.info(f"Setor {section_name} não encontrado: {e}. Tentando próximo setor...")
-                    self.driver.refresh()
-                    return False
+            except StaleElementReferenceException as e:
+                logging.warning(f"Elemento desatualizado ao tentar encontrar a seção {section_name}: {e}. Tentando novamente...")
+                self.driver.refresh() 
+                time.sleep(2)  
+                continue  
+            except Exception as e:
+                logging.info(f"Erro ao encontrar seção: {e}. Tentando próximo setor...")
+                return False
 
     def add_tickets_to_cart(self, number_of_guests: int, is_without_discount: bool) -> bool:
         logging.info("Tentando adicionar ingressos ao carrinho")
@@ -110,9 +117,9 @@ class SeleniumDriver:
 
             return True
         except StaleElementReferenceException as e:
-            logging.info(f"Erro ao adicionar ingressos ao carrinho: {e}. Tentando recapturar os elementos.")
+            logging.warning(f"Erro ao adicionar ingressos: {e}. Tentando novamente...")
             self.driver.refresh()
-            time.sleep(2)  # tempo pra pagina carregar
+            time.sleep(2)  
             return False
         except Exception as e:
             logging.info(f"Erro ao adicionar ingressos ao carrinho: {e}. Tentando outro setor...")
@@ -189,8 +196,8 @@ class SeleniumDriver:
                 return False
         except StaleElementReferenceException as e:
             logging.info(f"Elemento desatualizado: {e}. Recarregando a página e tentando novamente.")
-            self.driver.refresh()  
-            time.sleep(2) 
+            self.driver.refresh()
+            time.sleep(2)
             return False
 
     def define_target_section(self, desired_sections: list[str]) -> str:

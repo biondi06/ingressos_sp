@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-import './App.css';  // Arquivo de estilos atualizado
-import spfcLogo from './assets/spfc-logo.png';  // Adicionando o logo do São Paulo
+import './App.css'; 
+import spfcLogo from './assets/spfc-logo.png';  
 
 interface BotFormData {
   url: string;
@@ -19,7 +19,9 @@ const availableSections = [
   "CADEIRA SUPERIOR NORTE OREO",
   "CADEIRA SUPERIOR SUL DIAMANTE NEGRO", 
   "CADEIRA ESPECIAL OESTE OURO BRANCO",
-  "CAMAROTE CORPORATIVO SPFC"
+  "CAMAROTE CORPORATIVO SPFC",
+  "ARQUIBANCADA SUL DIAMANTE NEGRO",
+  "CADEIRA TÉRREA LESTE LACTA"
 ];
 
 const App: React.FC = () => {
@@ -33,17 +35,16 @@ const App: React.FC = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<string[]>([]); // Para armazenar as mensagens de status
+  const [messages, setMessages] = useState<string[]>([]); 
 
   useEffect(() => {
-    const socket = io('http://localhost:5000');  // Substitua pelo endereço correto do backend
+    const socket = io('http://localhost:5000');  
 
     socket.on('status_update', (data: { message: string }) => {
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages, data.message];
-        // Limite o número de mensagens (por exemplo, 5 últimas)
         if (newMessages.length > 5) {
-          newMessages.shift(); // Remove a primeira mensagem (mais antiga)
+          newMessages.shift(); 
         }
         return newMessages;
       });
@@ -101,8 +102,11 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={spfcLogo} alt="São Paulo FC" className="App-logo" />
-        <h1>Ingressos São Paulo FC</h1>
+        {}
+        <img src={spfcLogo} alt="São Paulo FC" className="App-logo-left" />
+        <h1>Bot - ingressos São Paulo FC</h1>
+        {}
+        <img src={spfcLogo} alt="São Paulo FC" className="App-logo-right" />
       </header>
       <div className="form-container">
         <form onSubmit={handleSubmit}>
@@ -151,7 +155,7 @@ const App: React.FC = () => {
           </button>
         </form>
 
-        {/* Mostrando as mensagens de status */}
+        {}
         <div className="status-messages">
           {messages.map((message, index) => (
             <p key={index}>{message}</p>
@@ -159,7 +163,7 @@ const App: React.FC = () => {
         </div>
       </div>
       <footer className="App-footer">
-        <p>© 2024 São Paulo Futebol Clube</p>
+        <p>Desenvolvido por Daniel Biondi 🎸</p>
       </footer>
     </div>
   );
