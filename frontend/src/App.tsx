@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 import './App.css';  // Arquivo de estilos atualizado
+import spfcLogo from './assets/spfc-logo.png';  // Adicionando o logo do São Paulo
 
 interface BotFormData {
   url: string;
@@ -31,7 +33,26 @@ const App: React.FC = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<string[]>([]); // Para armazenar as mensagens de status
+
+  useEffect(() => {
+    const socket = io('http://localhost:5000');  // Substitua pelo endereço correto do backend
+
+    socket.on('status_update', (data: { message: string }) => {
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages, data.message];
+        // Limite o número de mensagens (por exemplo, 5 últimas)
+        if (newMessages.length > 5) {
+          newMessages.shift(); // Remove a primeira mensagem (mais antiga)
+        }
+        return newMessages;
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -60,20 +81,18 @@ const App: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setMessage('');
 
     try {
-      // Enviando os dados para o backend
       const response = await axios.post('http://localhost:5000/start-bot', formData);
-      console.log('Response:', response);  // Log de depuração
+      console.log('Response:', response);
       if (response.data.message) {
-        setMessage('Bot iniciado com sucesso!');
+        setMessages([...messages, 'Bot iniciado com sucesso!']);
       } else {
-        setMessage('Erro ao iniciar o bot.');
+        setMessages([...messages, 'Erro ao iniciar o bot.']);
       }
     } catch (error) {
-      console.error('Erro ao enviar a requisição:', error);  // Log de erro
-      setMessage('Ocorreu um erro ao enviar a requisição.');
+      console.error('Erro ao enviar a requisição:', error);
+      setMessages([...messages, 'Ocorreu um erro ao enviar a requisição.']);
     } finally {
       setIsLoading(false);
     }
@@ -82,6 +101,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
+        <img src={spfcLogo} alt="São Paulo FC" className="App-logo" />
         <h1>Ingressos São Paulo FC</h1>
       </header>
       <div className="form-container">
@@ -130,7 +150,13 @@ const App: React.FC = () => {
             {isLoading ? 'Iniciando Bot...' : 'Iniciar Bot'}
           </button>
         </form>
-        {message && <p className="message">{message}</p>}
+
+        {/* Mostrando as mensagens de status */}
+        <div className="status-messages">
+          {messages.map((message, index) => (
+            <p key={index}>{message}</p>
+          ))}
+        </div>
       </div>
       <footer className="App-footer">
         <p>© 2024 São Paulo Futebol Clube</p>

@@ -132,10 +132,78 @@ input[type="checkbox"] {
   color: #ff0000;
 }
 
+/* Mensagens de status em tempo real */
+.status-messages {
+  margin-top: 40px;
+  background-color: #141414;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.status-messages h3 {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  color: #ff0000;
+}
+
+.status-messages ul {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 1.2em;
+}
+
+.status-messages li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #202020;
+  border-radius: 8px;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Rodapé */
 .App-footer {
   background-color: #000000;
   padding: 10px;
   color: white;
   font-size: 1em;
   text-align: center;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .sections-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .App-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .form-container {
+    margin: 20px;
+    padding: 15px;
+  }
+
+  .submit-button {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .status-messages {
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .status-messages h3 {
+    font-size: 1.4em;
+  }
+
+  .status-messages ul {
+    font-size: 1em;
+  }
 }
