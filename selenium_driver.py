@@ -29,7 +29,7 @@ class SeleniumDriver:
             if time_to_wait > 0:
                 logging.info(f"Aguardando horário agendado: {scheduled_start}")
                 time.sleep(time_to_wait)
-                logging.info("Iniciando após o horário agendado")
+                logging.info("AUTORIZA O ARBITRO")
 
     def accept_cookies(self):
         try:
@@ -109,6 +109,11 @@ class SeleniumDriver:
             review_continue_button.click()
 
             return True
+        except StaleElementReferenceException as e:
+            logging.info(f"Erro ao adicionar ingressos ao carrinho: {e}. Tentando recapturar os elementos.")
+            self.driver.refresh()
+            time.sleep(2)  # tempo pra pagina carregar
+            return False
         except Exception as e:
             logging.info(f"Erro ao adicionar ingressos ao carrinho: {e}. Tentando outro setor...")
             self.driver.refresh()
@@ -185,7 +190,7 @@ class SeleniumDriver:
         except StaleElementReferenceException as e:
             logging.info(f"Elemento desatualizado: {e}. Recarregando a página e tentando novamente.")
             self.driver.refresh()  
-            time.sleep(2)  
+            time.sleep(2) 
             return False
 
     def define_target_section(self, desired_sections: list[str]) -> str:
