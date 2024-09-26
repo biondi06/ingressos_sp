@@ -1,3 +1,4 @@
+/* Estilos Globais */
 .App {
   text-align: center;
   background: linear-gradient(135deg, #ff0000, #000000);
@@ -7,6 +8,7 @@
   flex-direction: column;
   justify-content: space-between;
   font-family: 'Poppins', sans-serif;
+  padding: 0 20px;  /* Adiciona espaçamento nas laterais */
 }
 
 .App-header {
@@ -45,7 +47,7 @@ h1 {
   background-color: rgba(0, 0, 0, 0.8);
   padding: 40px;
   border-radius: 15px;
-  width: 90%;
+  width: 100%;  /* Ajusta a largura para dispositivos menores */
   max-width: 700px;
   margin: 40px auto;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
@@ -176,32 +178,58 @@ input[type="checkbox"] {
   text-align: center;
 }
 
+/* Ajustes para dispositivos móveis e tablets */
 @media (max-width: 768px) {
-  .sections-grid {
-    grid-template-columns: 1fr;
-  }
-
   .App-header h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;  /* Reduz o tamanho do título em dispositivos menores */
   }
 
   .form-container {
-    margin: 20px;
-    padding: 15px;
+    padding: 20px;  /* Reduz o espaçamento em dispositivos menores */
+  }
+
+  .sections-grid {
+    grid-template-columns: 1fr;  /* Coloca todas as seções em uma coluna */
   }
 
   .submit-button {
     font-size: 1rem;
-    padding: 10px;
+    padding: 12px;
   }
 
   .status-messages {
     padding: 20px;
-    margin-top: 20px;
   }
 
   .status-messages h3 {
-    font-size: 1.4em;
+    font-size: 1.5em;
+  }
+
+  .status-messages ul {
+    font-size: 1.1em;
+  }
+}
+
+/* Responsividade extra para smartphones pequenos */
+@media (max-width: 480px) {
+  .App-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .App-logo-left, .App-logo-right {
+    width: 50px;  /* Reduz o tamanho dos logos em smartphones */
+  }
+
+  .form-container {
+    padding: 15px;
+  }
+
+  .submit-button {
+    font-size: 0.9rem;
+  }
+
+  .status-messages h3 {
+    font-size: 1.2em;
   }
 
   .status-messages ul {
