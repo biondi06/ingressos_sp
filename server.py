@@ -5,14 +5,13 @@ from selenium_driver import SeleniumDriver
 import time
 
 app = Flask(__name__)
-CORS(app)  # Habilitando CORS para permitir requisições do frontend
-socketio = SocketIO(app, cors_allowed_origins="*")  # Habilita o WebSocket e permite todas as origens
+CORS(app)  
+socketio = SocketIO(app, cors_allowed_origins="*") 
 
 @app.route('/start-bot', methods=['POST'])
 def start_bot():
     data = request.get_json()
 
-    # Verificação dos dados recebidos
     url = data.get('url')
     cpf = data.get('cpf')
     number_of_tickets = int(data.get('numberOfTickets'))
@@ -24,7 +23,6 @@ def start_bot():
         return jsonify({'error': 'Todos os campos são obrigatórios.'}), 400
 
     try:
-        # Inicializando o SeleniumDriver com os dados recebidos
         bot = SeleniumDriver(url)
 
         while True:
@@ -36,7 +34,7 @@ def start_bot():
 
                 if target_section_found == "none":
                     socketio.emit('status_update', {'message': 'Nenhuma seção disponível. Tentando novamente...'})
-                    time.sleep(10)  # Espera 10 segundos antes de tentar novamente
+                    time.sleep(10) 
                     continue
 
                 socketio.emit('status_update', {'message': f'Seção {target_section_found} encontrada. Tentando adicionar ingressos ao carrinho.'})
@@ -77,8 +75,6 @@ def start_bot():
     except Exception as e:
         socketio.emit('status_update', {'message': f'Erro: {str(e)}'})
         return jsonify({'error': str(e)}), 500
-
-# Rota padrão para evitar erro 404 no favicon
 @app.route('/favicon.ico')
 def favicon():
     return '', 204
